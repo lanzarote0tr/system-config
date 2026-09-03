@@ -1,0 +1,65 @@
+# Portable half of the git config. Anything with an absolute path, a secret,
+# or a per-OS answer lives in ~/.gitconfig.local, which bootstrap.sh writes
+# and which this file includes at the end.
+
+[user]
+	name = lanzarote0tr
+	email = me@trillion-won.com
+	signingkey = 4990EEE598E9E22E
+
+[init]
+	defaultBranch = main
+
+[core]
+	excludesfile = ~/.gitignore_global
+	pager = less -FRX
+
+[commit]
+	gpgsign = true
+
+[gpg]
+	program = gpg
+
+[pull]
+	rebase = true
+
+[push]
+	autoSetupRemote = true
+	followTags = true
+
+[fetch]
+	prune = true
+
+[rebase]
+	autoStash = true
+
+[diff]
+	tool = nvimdiff
+	algorithm = histogram
+	colorMoved = zebra
+
+[difftool]
+	prompt = false
+
+[difftool "nvimdiff"]
+	cmd = nvim -d \"$LOCAL\" \"$REMOTE\"
+
+[merge]
+	tool = nvimdiff
+	conflictStyle = zdiff3
+
+[mergetool]
+	keepBackup = false
+
+[mergetool "nvimdiff"]
+	cmd = nvim -d \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\" -c '$wincmd w' -c 'wincmd J'
+
+[alias]
+	st = status
+	cm = commit
+	co = checkout
+	lograph = log --graph --name-status
+	logall = log --graph --name-status --all --show-signature
+
+[include]
+	path = ~/.gitconfig.local

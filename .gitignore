@@ -1,0 +1,16 @@
+# link.sh drops replaced files here before overwriting them. Local safety net,
+# not history — keep it out of the repo.
+.backups/
+
+# Never commit anything with a secret in it.
+**/hosts.yml
+**/*.private
+**/id_*
+!**/id_*.pub
+*.key
+*.pem
+.env
+.env.*
+
+# macOS
+.DS_Store

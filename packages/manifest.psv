@@ -1,0 +1,138 @@
+# system-config package manifest  (pipe-separated; read by packages/resolve.sh)
+#
+#   id | groups | macos | arch | ubuntu | note
+#
+# Each platform cell is  <manager>:<space separated package names>  or  -  (unavailable).
+# Managers: brew cask pacman aur apt npm pipx go manual
+#   manual:<text>  -> not installed automatically; printed as a to-do at the end of a run.
+#   -              -> genuinely not available on that platform; silently skipped.
+#
+# `groups` are what profiles/ select on. Keep them comma-separated, no spaces.
+
+# ---------------------------------------------------------------------- core
+git                | core | brew:git                | pacman:git              | apt:git                        |
+curl               | core | brew:curl               | pacman:curl             | apt:curl                       |
+wget               | core | brew:wget               | pacman:wget             | apt:wget                       |
+gnupg              | core | brew:gnupg pinentry-mac | pacman:gnupg pinentry   | apt:gnupg pinentry-curses      | commit signing + key publishing
+openssh            | core | -                       | pacman:openssh          | apt:openssh-client             | preinstalled on macOS
+ca-certificates    | core | -                       | pacman:ca-certificates  | apt:ca-certificates            |
+unzip              | core | brew:unar               | pacman:unzip p7zip      | apt:unzip p7zip-full           |
+tree               | core | brew:tree               | pacman:tree             | apt:tree                       |
+less               | core | -                       | pacman:less             | apt:less                       |
+ripgrep            | core | brew:ripgrep            | pacman:ripgrep          | apt:ripgrep                    | used by nvim telescope live_grep
+fd                 | core | brew:fd                 | pacman:fd               | apt:fd-find                    | binary is fdfind on Debian/Ubuntu
+fzf                | core | brew:fzf                | pacman:fzf              | apt:fzf                        |
+jq                 | core | brew:jq                 | pacman:jq               | apt:jq                         |
+htop               | core | brew:htop               | pacman:htop             | apt:htop                       |
+btop               | core | brew:btop               | pacman:btop             | apt:btop                       |
+fastfetch          | core | brew:fastfetch          | pacman:fastfetch        | apt:fastfetch                  |
+colordiff          | core | brew:colordiff          | pacman:colordiff        | apt:colordiff                  |
+clipboard          | core | -                       | pacman:xclip wl-clipboard | apt:xclip wl-clipboard       | macOS uses builtin pbcopy/pbpaste
+nano               | core | brew:nano               | pacman:nano             | apt:nano                       |
+
+# --------------------------------------------------------------------- shell
+zsh                | shell | -                      | pacman:zsh              | apt:zsh                        | default shell on macOS
+zsh-autosuggestions| shell | brew:zsh-autosuggestions | pacman:zsh-autosuggestions | apt:zsh-autosuggestions   |
+z                  | shell | brew:z                 | aur:z                   | apt:  autojump                 | directory jumper sourced from .zshrc
+
+# -------------------------------------------------------------------- editor
+neovim             | editor | brew:neovim            | pacman:neovim           | apt:neovim                     | primary editor; config in dotfiles/nvim
+tree-sitter-cli    | editor | brew:tree-sitter-cli   | pacman:tree-sitter-cli  | npm:tree-sitter-cli            | nvim-treesitter needs this to build parsers
+intellij-idea      | devgui | cask:intellij-idea     | pacman:intellij-idea-community-edition | manual:JetBrains Toolbox |
+zed                | devgui | cask:zed               | aur:zed                 | manual:https://zed.dev/download |
+vscode             | devgui | cask:visual-studio-code | aur:visual-studio-code-bin | manual:Microsoft apt repo   |
+
+# ------------------------------------------------------------------ toolchains
+node               | lang | brew:node               | pacman:nodejs npm       | apt:nodejs npm                 | also the runtime for nvim LSP servers
+bun                | lang | manual:curl -fsSL https://bun.sh/install %% bash | manual:curl -fsSL https://bun.sh/install %% bash | manual:curl -fsSL https://bun.sh/install %% bash |
+go                 | lang | brew:go                 | pacman:go               | apt:golang-go                  |
+openjdk            | lang | brew:openjdk            | pacman:jdk-openjdk      | apt:default-jdk                |
+python             | lang | brew:python@3.12        | pacman:python           | apt:python3 python3-venv       |
+pipx               | lang | brew:pipx               | pacman:python-pipx      | apt:pipx                       |
+pyenv              | lang | brew:pyenv pyenv-virtualenv | aur:pyenv pyenv-virtualenv | manual:https://github.com/pyenv/pyenv-installer |
+rustup             | lang | brew:rustup             | pacman:rustup           | manual:curl https://sh.rustup.rs -sSf %% sh |
+cmake              | lang | cask:cmake              | pacman:cmake            | apt:cmake                      |
+
+# ------------------------------------------------------------------- devtools
+gh                 | devtool | brew:gh              | pacman:github-cli       | apt:gh                         | apt needs the GitHub CLI repo; see install/ubuntu.sh
+git-filter-repo    | devtool | brew:git-filter-repo | pacman:git-filter-repo  | apt:git-filter-repo            |
+doppler            | devtool | brew:doppler         | aur:doppler-cli         | manual:https://docs.doppler.com/docs/install-cli |
+gdb                | devtool | brew:gdb             | pacman:gdb              | apt:gdb                        |
+postgresql-client  | devtool | brew:libpq          | pacman:postgresql-libs  | apt:postgresql-client          |
+mysql-client       | devtool | brew:mysql-client@8.4 | pacman:mariadb-clients | apt:mysql-client               |
+nginx              | devtool,server | brew:nginx    | pacman:nginx            | apt:nginx                      |
+apidog             | devgui | cask:apidog           | aur:apidog-bin          | manual:https://apidog.com/download |
+postman            | devgui | cask:postman          | aur:postman-bin         | manual:https://www.postman.com/downloads |
+datagrip           | devgui | cask:datagrip         | aur:datagrip            | manual:JetBrains Toolbox       |
+devutils           | devgui | cask:devutils         | -                       | -                              | macOS only
+
+# ----------------------------------------------------------- virtualisation
+docker             | virt | cask:docker-desktop     | pacman:docker docker-compose | apt:docker.io docker-compose-v2 | on Linux, enable the daemon + add yourself to the docker group
+orbstack           | virt | cask:orbstack           | -                       | -                              | macOS only; replaces Docker Desktop
+qemu               | virt | brew:qemu               | pacman:qemu-full        | apt:qemu-system                |
+utm                | virt | cask:utm                | -                       | -                              | macOS only
+crystalfetch       | virt | cask:crystalfetch       | -                       | -                              | macOS only; builds Windows ISOs for UTM
+dokploy            | server | -                      | manual:https://dokploy.com/docs | manual:curl -sSL https://dokploy.com/install.sh %% sh | home server only
+
+# -------------------------------------------------------------- networking
+wireguard          | net | brew:wireguard-tools     | pacman:wireguard-tools  | apt:wireguard                  |
+nordvpn            | net | cask:nordvpn            | aur:nordvpn-bin         | manual:https://nordvpn.com/download/linux |
+ngrok              | net | cask:ngrok              | aur:ngrok               | manual:https://ngrok.com/download |
+wakeonlan          | net | brew:wakeonlan          | aur:wakeonlan           | apt:wakeonlan                  | waking the home server
+websocat           | net | brew:websocat           | pacman:websocat         | manual:cargo install websocat  |
+
+# ----------------------------------------------------------------- security
+wireshark          | sec | brew:wireshark          | pacman:wireshark-qt     | apt:wireshark                  |
+metasploit         | sec | cask:metasploit         | aur:metasploit          | manual:https://docs.metasploit.com/docs/using-metasploit/getting-started/nightly-installers.html |
+mitmproxy          | sec | cask:mitmproxy          | pacman:mitmproxy        | apt:mitmproxy                  |
+bettercap          | sec | brew:bettercap          | pacman:bettercap        | apt:bettercap                  |
+gobuster           | sec | brew:gobuster           | aur:gobuster            | go:github.com/OJ/gobuster/v3@latest |
+ffuf               | sec | brew:ffuf               | aur:ffuf                | go:github.com/ffuf/ffuf/v2@latest |
+ncrack             | sec | brew:ncrack             | aur:ncrack              | apt:ncrack                     |
+fcrackzip          | sec | brew:fcrackzip          | aur:fcrackzip           | apt:fcrackzip                  |
+exiftool           | sec | brew:exiftool           | pacman:perl-image-exiftool | apt:libimage-exiftool-perl  |
+bvi                | sec | brew:bvi                | aur:bvi                 | apt:bvi                        | hex editor
+binwalk            | sec | brew:binwalk            | pacman:binwalk          | apt:binwalk                    |
+
+# ------------------------------------------------------------------ browsers
+firefox            | browser | cask:firefox         | pacman:firefox          | apt:firefox                    |
+google-chrome      | browser | cask:google-chrome   | aur:google-chrome       | manual:https://www.google.com/chrome |
+brave              | browser | cask:brave-browser   | aur:brave-bin           | manual:https://brave.com/linux |
+arc                | browser | cask:arc             | -                       | -                              | macOS only
+
+# ------------------------------------------------------------------- comms
+discord            | comms | cask:discord          | pacman:discord          | manual:https://discord.com/download |
+discord-canary     | comms | cask:discord@canary   | aur:discord-canary      | manual:https://discord.com/download/canary |
+slack              | comms | cask:slack            | aur:slack-desktop       | manual:https://slack.com/downloads/linux |
+zoom               | comms | cask:zoom             | aur:zoom                | manual:https://zoom.us/download |
+kakaotalk          | comms | cask:kakaotalk        | -                       | -                              | macOS/Windows only
+telegram           | comms | cask:telegram         | pacman:telegram-desktop | apt:telegram-desktop           | 유빈아카이브 archive lives here
+
+# ------------------------------------------------------------------- media
+obs                | media | cask:obs              | pacman:obs-studio       | apt:obs-studio                 |
+yt-dlp             | media | brew:yt-dlp           | pacman:yt-dlp           | apt:yt-dlp                     |
+ffmpeg             | media | brew:ffmpeg           | pacman:ffmpeg           | apt:ffmpeg                     |
+steam              | media | cask:steam            | pacman:steam            | apt:steam                      |
+inkscape           | media | cask:inkscape         | pacman:inkscape         | apt:inkscape                   |
+
+# ------------------------------------------------------------- docs & study
+notion             | docs | cask:notion            | aur:notion-app-electron | manual:https://www.notion.so/desktop |
+anki               | docs | cask:anki              | aur:anki-bin            | apt:anki                       |
+hwp                | docs | manual:한컴오피스 뷰어 — 교육디지털원패스(goedu.kr) 로그인 필요 | manual:no Linux build; use a Windows VM | manual:no Linux build; use a Windows VM |
+
+# ---------------------------------------------------------------------- ai
+ollama             | ai | brew:ollama               | pacman:ollama           | manual:curl -fsSL https://ollama.com/install.sh %% sh |
+claude-code        | ai | npm:@anthropic-ai/claude-code | npm:@anthropic-ai/claude-code | npm:@anthropic-ai/claude-code |
+codex              | ai | npm:@openai/codex        | npm:@openai/codex       | npm:@openai/codex              |
+gemini-cli         | ai | brew:gemini-cli          | npm:@google/gemini-cli  | npm:@google/gemini-cli         |
+
+# --------------------------------------------------------- macOS desktop QoL
+raycast            | desktop | cask:raycast         | -                       | -                              |
+shortcat           | desktop | cask:shortcat        | -                       | -                              |
+gureumkim          | desktop | cask:gureumkim       | -                       | -                              | Korean input method
+switchaudio-osx    | desktop | brew:switchaudio-osx | -                       | -                              |
+vnc-viewer         | desktop | cask:vnc-viewer      | pacman:tigervnc         | apt:tigervnc-viewer            |
+
+# ------------------------------------------------------------------ mobile
+android-tools      | mobile | cask:android-platform-tools | pacman:android-tools | apt:android-tools-adb          |
+scrcpy             | mobile | brew:scrcpy          | pacman:scrcpy           | apt:scrcpy                     |
