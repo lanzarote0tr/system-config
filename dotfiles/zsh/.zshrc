@@ -1,5 +1,8 @@
 # .zshrc — interactive shells only.
 
+# ------------------------------------------------------------------ prompt
+PROMPT='%F{cyan}%n@%m%f %F{yellow}%~%f %# '
+
 # ------------------------------------------------------------- completion
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'   # case-insensitive
 autoload -Uz compinit && compinit -C
@@ -20,9 +23,15 @@ fi
 alias ll='ls -hal'
 alias l='ll'
 alias a='ls -al'
+alias grep='grep --color=auto'
 
 alias vim='nvim'
 alias gt='git log --graph --oneline'
+
+# Backlight control. Path is specific to machines with an eDP-1 panel on
+# card1 (e.g. Intel iGPU laptops) — harmless no-op elsewhere since the path
+# just won't exist.
+alias b='sudo vim /sys/devices/pci0000:00/0000:00:02.0/drm/card1/card1-eDP-1/intel_backlight/brightness'
 
 # Homebrew's GCC is versioned; alias to it only when it is actually installed.
 for _v in 16 15 14 13; do

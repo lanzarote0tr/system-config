@@ -51,7 +51,11 @@ profiles/                 macbook, galaxybook, server, minimal
 install/
   packages.sh             dispatcher; batches by manager, skips what is present
   macos.sh arch.sh ubuntu.sh    per-platform backends
+  grub.sh                 install the GRUB theme (Arch/UEFI; --uninstall to revert)
 dotfiles/<package>/       mirrors $HOME; nvim/.config/nvim/init.lua -> ~/.config/nvim/init.lua
+system/grub/              Tokyo Night GRUB theme (system-level, not a dotfile)
+  gen-assets.py           regenerates the PNGs; stdlib only, no ImageMagick
+  theme/                  theme.txt + generated art (.pf2 fonts built at install)
 scripts/
   link.sh                 symlink dotfiles into $HOME (stow-like, no dependency)
   post-link.sh            seed the per-machine .local files

@@ -70,6 +70,23 @@ seed "$HOME/.zshenv.local" <<'EOF'
 # Do not put secrets here if anything else can read your home directory.
 EOF
 
+# --------------------------------------------------- default applications
+# xdg-open picks the first registered handler when nothing is set explicitly,
+# which on a fresh Arch box means whichever browser landed in mimeinfo.cache
+# first. Say it out loud instead. Not a symlinked dotfile: ~/.config/
+# mimeapps.list also collects associations written by GUI apps at runtime.
+if [ "$OS_FAMILY" != macos ] && have firefox; then
+  if [ "$(xdg-settings get default-web-browser 2>/dev/null)" = firefox.desktop ]; then
+    skip "default browser is already firefox"
+  elif have xdg-settings; then
+    run xdg-settings set default-web-browser firefox.desktop
+    run xdg-mime default firefox.desktop \
+      x-scheme-handler/http x-scheme-handler/https \
+      text/html application/xhtml+xml
+    ok "default browser -> firefox"
+  fi
+fi
+
 # ------------------------------------------------------------------ shell
 if [ "$SHELL" != "$(command -v zsh 2>/dev/null)" ] && have zsh; then
   warn "login shell is $SHELL, not zsh — change it with:"
